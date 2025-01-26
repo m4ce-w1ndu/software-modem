@@ -25,7 +25,7 @@ namespace swmodem {
         return audio_signal;
     }
 
-    std::vector<uint8_t> SoftwareModem::demodulate(const std::vector<uint8_t> &signal) const
+    std::vector<uint8_t> SoftwareModem::demodulate(const std::vector<double> &signal) const
     {
         std::vector<uint8_t> data;
         constexpr double bit_duration = 0.01;

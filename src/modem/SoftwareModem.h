@@ -25,7 +25,7 @@ namespace swmodem {
         /// Demodulate a sine wave signal into data
         /// @param signal sine wave signal as vector of double
         /// @return demodulated sine wave signal as data vector of bytes
-        [[nodiscard]] std::vector<uint8_t> demodulate(const std::vector<uint8_t>& signal) const;
+        [[nodiscard]] std::vector<uint8_t> demodulate(const std::vector<double>& signal) const;
     private:
         double sample_rate;     // Samples per second
         double base_freq;       // Base modulation frequency
