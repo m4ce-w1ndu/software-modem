@@ -1,0 +1,60 @@
+# Build directories
+build/
+cmake-build-*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+Makefile
+*.make
+install_manifest.txt
+
+# IDE-specific files (CLion, VSCode)
+.idea/
+.vscode/
+*.iml
+
+# Compiled object files
+*.o
+*.obj
+*.lo
+*.la
+
+# Libraries and executables
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Logs and temporary files
+*.log
+*.tmp
+*.pid
+*.swp
+*.swo
+*.DS_Store
+
+# Debugging and profiling files
+*.out
+*.dSYM/
+*.prof
+*.gcda
+*.gcno
+
+# Coverage reports
+lcov-report/
+*.gcov
+
+# Backup files
+*.bak
+*.orig
+*.old
+
+# System files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
