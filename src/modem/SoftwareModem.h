@@ -36,6 +36,14 @@ namespace swmodem {
         /// @param duration signal duration
         /// @return generated sine wave signal as vector of double values
         [[nodiscard]] std::vector<double> generate_sine_wave(double freq, double duration) const;
+
+        /// Run Goertzel signal analysis algorithm
+        /// @param signal signal data
+        /// @param start start of the signal
+        /// @param samples number of samples
+        /// @param tgt_freq target frequency
+        /// @return power at the target frequency
+        [[nodiscard]] double goertzel(const std::vector<double>& signal, size_t start, size_t samples, double tgt_freq) const;
     };
 
 }

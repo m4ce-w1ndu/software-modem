@@ -1,5 +1,7 @@
 #include "SoftwareModem.h"
 
+#include <cmath>
+
 namespace swmodem {
 
     SoftwareModem::SoftwareModem(const double sample_rate, const double base_freq, const double freq_step)
@@ -11,7 +13,7 @@ namespace swmodem {
 
         for (uint8_t byte : data) {
             for (int bit = 0; bit < 8; ++bit) {
-                const double bit_duration = 0.01;
+                constexpr double bit_duration = 0.01;
 
                 const bool is_one = (byte & (1 << bit)) != 0;
                 const double freq = is_one ? base_freq + freq_step : base_freq;
@@ -41,16 +43,12 @@ namespace swmodem {
                     break;
                 }
 
-                // Analyze signal for this bit
-                double sum = 0.0;
-                for (size_t j = 0; j < samples_per_bit; ++j) {
-                    sum += signal[bit_start + j];
-                }
+                // Analyse signal for this bit with Goertzel
+                const double power_zero = goertzel(signal, bit_start, samples_per_bit, base_freq);
+                const double power_one = goertzel(signal, bit_start, samples_per_bit, base_freq + freq_step);
 
-                const double average = sum / static_cast<double>(samples_per_bit);
-
-                // Threshold to distinguish between 0 and 1
-                if (average > 0.5) {
+                // Decide the bit value based on stronger power
+                if (power_one > power_zero) {
                     byte |= (1 << bit);
                 }
             }
@@ -73,4 +71,22 @@ namespace swmodem {
         return sine_wave;
     }
 
+    double SoftwareModem::goertzel(const std::vector<double> &signal, size_t start, size_t samples,
+        double tgt_freq) const
+    {
+        double s_prev = 0.0;
+        double s_prev2 = 0.0;
+        const double normalized_freq = 2.0 * M_PI * tgt_freq / sample_rate;
+
+        for (size_t i = 0; i < samples; ++i) {
+            const double sample = signal[start + i];
+            const double s = sample + 2.0 * std::cos(normalized_freq) * s_prev - s_prev2;
+            s_prev2 = s_prev;
+            s_prev = s;
+        }
+
+        // Power at the target frequency
+        const double power = s_prev2 * s_prev2 + s_prev * s_prev - 2.0 * std::cos(normalized_freq) * s_prev * s_prev2;
+        return power;
+    }
 }
