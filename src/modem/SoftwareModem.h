@@ -26,6 +26,22 @@ namespace swmodem {
         /// @param signal sine wave signal as vector of double
         /// @return demodulated sine wave signal as data vector of bytes
         [[nodiscard]] std::vector<uint8_t> demodulate(const std::vector<double>& signal) const;
+
+        /// Return the sample rate of the Modem
+        /// @return sample rate as double in Hz
+        [[nodiscard]] constexpr double get_sample_rate() const { return sample_rate; }
+
+        /// Return the base frequency (0-bit value) of the Modem
+        /// @return base frequency as double in Hz
+        [[nodiscard]] constexpr double get_base_freq() const { return base_freq; }
+
+        /// Return the frequency step (1-bit value offset) of the Modem
+        /// @return frequency step as double in Hz
+        [[nodiscard]] constexpr double get_freq_step() const { return freq_step; }
+
+        /// Return current bit duration
+        /// @return current bit duration in seconds (double)
+        [[nodiscard]] static constexpr double get_bit_duration() { return BIT_DURATION; }
     private:
         double sample_rate;     // Samples per second
         double base_freq;       // Base modulation frequency
