@@ -31,11 +31,14 @@ namespace swmodem {
         double base_freq;       // Base modulation frequency
         double freq_step;       // Frequency step for different bit values
 
+        /// Default bit duration
+        static constexpr double BIT_DURATION = 0.000454;
+
         /// Generate a sine wave signal
         /// @param freq signal frequency
         /// @param duration signal duration
         /// @return generated sine wave signal as vector of double values
-        [[nodiscard]] std::vector<double> generate_sine_wave(double freq, double duration) const;
+        [[nodiscard]] std::vector<double> generate_sine_wave(double freq, double duration = BIT_DURATION) const;
 
         /// Run Goertzel signal analysis algorithm
         /// @param signal signal data

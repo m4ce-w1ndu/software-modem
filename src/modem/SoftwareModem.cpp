@@ -11,15 +11,13 @@ namespace swmodem {
     {
         std::vector<double> audio_signal;
 
-        for (uint8_t byte : data) {
+        for (const uint8_t byte : data) {
             for (int bit = 0; bit < 8; ++bit) {
-                constexpr double bit_duration = 0.01;
-
                 const bool is_one = (byte & (1 << bit)) != 0;
                 const double freq = is_one ? base_freq + freq_step : base_freq;
 
                 // Generate sine wave for this bit
-                std::vector<double> sine_wave = generate_sine_wave(freq, bit_duration);
+                std::vector<double> sine_wave = generate_sine_wave(freq);
                 audio_signal.insert(audio_signal.end(), sine_wave.begin(), sine_wave.end());
             }
         }
@@ -30,8 +28,7 @@ namespace swmodem {
     std::vector<uint8_t> SoftwareModem::demodulate(const std::vector<double> &signal) const
     {
         std::vector<uint8_t> data;
-        constexpr double bit_duration = 0.01;
-        const auto samples_per_bit = static_cast<size_t>(sample_rate * bit_duration);
+        const auto samples_per_bit = static_cast<size_t>(sample_rate * BIT_DURATION);
 
         for (size_t i = 0; i < signal.size(); i += samples_per_bit * 8) {
             uint8_t byte = 0;
@@ -71,8 +68,8 @@ namespace swmodem {
         return sine_wave;
     }
 
-    double SoftwareModem::goertzel(const std::vector<double> &signal, size_t start, size_t samples,
-        double tgt_freq) const
+    double SoftwareModem::goertzel(const std::vector<double> &signal, const size_t start, const size_t samples,
+        const double tgt_freq) const
     {
         double s_prev = 0.0;
         double s_prev2 = 0.0;

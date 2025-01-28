@@ -4,13 +4,13 @@
 #include <iostream>
 
 std::vector<uint8_t> string_to_bytes(const std::string& text);
-std::string bytes_to_string(const std::vector<uint8_t>& bytes);
+void print_as_string(const std::vector<uint8_t>& bytes);
 
 int main(int argc, char* argv[])
 {
     // Initialize a modem
     swmodem::SoftwareModem modem(44100.0, 1000.0, 500.0);
-    std::string input, output;
+    std::string input;
 
     // Sample data
     std::cout << "input string to encode: ";
@@ -26,12 +26,12 @@ int main(int argc, char* argv[])
     std::vector<uint8_t> decoded_data = modem.demodulate(audio_data);
     std::cout << "Decoded data:\n";
 
-    for (uint8_t byte : decoded_data) {
+    for (const uint8_t byte : decoded_data) {
         std::cout << "0x" << std::hex << static_cast<int>(byte) << "\n";
     }
 
-    output = bytes_to_string(decoded_data);
-    std::cout << "As text: " << output << "\n";
+    std::cout << "As text: \n";
+    print_as_string(decoded_data);
 
     return 0;
 }
@@ -45,11 +45,10 @@ std::vector<uint8_t> string_to_bytes(const std::string& text)
     return bytes;
 }
 
-std::string bytes_to_string(const std::vector<uint8_t>& bytes)
+void print_as_string(const std::vector<uint8_t>& bytes)
 {
-    std::string text;
-    std::transform(bytes.cbegin(), bytes.cend(), text.begin(), [](const uint8_t byte) {
-        return static_cast<char>(byte);
-    });
-    return text;
+    for (const uint8_t byte : bytes) {
+        std::cout << static_cast<char>(byte);
+    }
+    std::cout << std::endl;
 }
