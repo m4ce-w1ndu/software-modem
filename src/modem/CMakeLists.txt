@@ -22,7 +22,10 @@ add_library(modem STATIC
 target_link_libraries(modem PRIVATE portaudio)
 
 # Specify includes
-target_include_directories(modem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(modem PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}       # Include current source directory
+		${portaudio_SOURCE_DIR}/include   # Include PortAudio headers
+)
 
 # Add compile options
 target_compile_options(modem PRIVATE -Wall -Wextra -pedantic)

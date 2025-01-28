@@ -1,4 +1,5 @@
 #include <SoftwareModem.h>
+#include <ModemAudioPlayer.h>
 
 #include <cstdint>
 #include <iostream>
@@ -8,9 +9,16 @@ void print_as_string(const std::vector<uint8_t>& bytes);
 
 int main(int argc, char* argv[])
 {
+    constexpr double SAMPLE_RATE = 44100.0;
+    constexpr double BASE_FREQ = 1000.0;
+    constexpr double FREQ_STEP = 500.0;
+
     // Initialize a modem
-    swmodem::SoftwareModem modem(44100.0, 1000.0, 500.0);
+    const swmodem::SoftwareModem modem(SAMPLE_RATE, BASE_FREQ, FREQ_STEP, swmodem::SoftwareModem::MIN_BIT_DURATION);
     std::string input;
+
+    // Initialize a player
+    swmodem::ModemAudioPlayer player;
 
     // Sample data
     std::cout << "input string to encode: ";
@@ -22,8 +30,11 @@ int main(int argc, char* argv[])
     const std::vector<double> audio_data = modem.modulate(data);
     std::cout << "Generated " << audio_data.size() << " audio samples.\n";
 
+    // Play audio
+    player.play(audio_data, SAMPLE_RATE);
+
     // Demodulate audio back into data
-    std::vector<uint8_t> decoded_data = modem.demodulate(audio_data);
+    const std::vector<uint8_t> decoded_data = modem.demodulate(audio_data);
     std::cout << "Decoded data:\n";
 
     for (const uint8_t byte : decoded_data) {

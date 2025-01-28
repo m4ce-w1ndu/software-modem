@@ -15,7 +15,8 @@ namespace swmodem {
         /// @param sample_rate modem sampling rate
         /// @param base_freq signal base frequency
         /// @param freq_step signal frequency step
-        SoftwareModem(double sample_rate, double base_freq, double freq_step);
+        /// @param bit_duration bit duration in seconds
+        SoftwareModem(double sample_rate, double base_freq, double freq_step, double bit_duration = DEFAULT_BIT_DURATION);
 
         /// Modulate data into a sine wave audio signal
         /// @param data data to modulate as byte array
@@ -41,20 +42,26 @@ namespace swmodem {
 
         /// Return current bit duration
         /// @return current bit duration in seconds (double)
-        [[nodiscard]] static constexpr double get_bit_duration() { return BIT_DURATION; }
+        [[nodiscard]] constexpr double get_bit_duration() const { return bit_duration; }
+
+        /// Maximum bit duration
+        static constexpr double MAX_BIT_DURATION = 0.1;
+
+        /// Default bit duration
+        static constexpr double DEFAULT_BIT_DURATION = 0.01;
+
+        /// Minimum bit duration
+        static constexpr double MIN_BIT_DURATION = 0.000454;
     private:
         double sample_rate;     // Samples per second
         double base_freq;       // Base modulation frequency
         double freq_step;       // Frequency step for different bit values
-
-        /// Default bit duration
-        static constexpr double BIT_DURATION = 0.000454;
+        double bit_duration;    // Bit duration
 
         /// Generate a sine wave signal
         /// @param freq signal frequency
-        /// @param duration signal duration
         /// @return generated sine wave signal as vector of double values
-        [[nodiscard]] std::vector<double> generate_sine_wave(double freq, double duration = BIT_DURATION) const;
+        [[nodiscard]] std::vector<double> generate_sine_wave(double freq) const;
 
         /// Run Goertzel signal analysis algorithm
         /// @param signal signal data

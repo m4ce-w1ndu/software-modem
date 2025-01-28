@@ -4,8 +4,8 @@
 
 namespace swmodem {
 
-    SoftwareModem::SoftwareModem(const double sample_rate, const double base_freq, const double freq_step)
-        : sample_rate(sample_rate), base_freq(base_freq), freq_step(freq_step) {}
+    SoftwareModem::SoftwareModem(const double sample_rate, const double base_freq, const double freq_step, const double bit_duration)
+        : sample_rate(sample_rate), base_freq(base_freq), freq_step(freq_step), bit_duration(bit_duration) {}
 
     std::vector<double> SoftwareModem::modulate(const std::vector<uint8_t> &data) const
     {
@@ -28,7 +28,7 @@ namespace swmodem {
     std::vector<uint8_t> SoftwareModem::demodulate(const std::vector<double> &signal) const
     {
         std::vector<uint8_t> data;
-        const auto samples_per_bit = static_cast<size_t>(sample_rate * BIT_DURATION);
+        const auto samples_per_bit = static_cast<size_t>(sample_rate * bit_duration);
 
         for (size_t i = 0; i < signal.size(); i += samples_per_bit * 8) {
             uint8_t byte = 0;
@@ -56,9 +56,9 @@ namespace swmodem {
         return data;
     }
 
-    std::vector<double> SoftwareModem::generate_sine_wave(const double freq, const double duration) const
+    std::vector<double> SoftwareModem::generate_sine_wave(const double freq) const
     {
-        const auto total_samples = static_cast<size_t>(sample_rate * duration);
+        const auto total_samples = static_cast<size_t>(sample_rate * bit_duration);
         std::vector<double> sine_wave(total_samples);
 
         for (size_t i = 0; i < total_samples; ++i) {
